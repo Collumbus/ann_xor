@@ -22,7 +22,7 @@ matplotlib.use('TkAgg')
 #Window root configs
 root = tk.Tk()
 root.title("RNA para previsão de valores da porta XOR")
-root.geometry("600x1030+400+100")
+root.geometry("630x1030+400+100")
 img = ImageTk.PhotoImage(Image.open('pybrain_logoe.gif'))
 panel = tk.Label(root, image = img)
 panel.grid(row=0, column=0, columnspan=2, rowspan=4, sticky=W+E+N+S, padx=5,
@@ -30,7 +30,7 @@ panel.grid(row=0, column=0, columnspan=2, rowspan=4, sticky=W+E+N+S, padx=5,
 
 
 #Set up misc. widgets
-Label(root, text="Configurações", font=('Verdana','13','bold'), width=60,
+Label(root, text="Configurações", font=('Verdana','13','bold'), width=63,
     bg='#135823', fg='grey' ).grid(row=0,columnspan=2)
 Label(root, text="Épocas", font=('Verdana','11','bold')).grid(row=1)
 Label(root, text="Momento", font=('Verdana','11','bold')).grid(row=1,column=1)
@@ -87,7 +87,7 @@ submit = Button(root, text="Rodar", width=13, command=lambda: all(e1.get(),
             e2.get(),e3.get(),e4.get(),e5.get(),e6.get())).grid(row=7, column=0,
             pady=4,columnspan=2)
 
-Label(root, text="Resultados", font=('Verdana','13','bold'), width=60,
+Label(root, text="Resultados", font=('Verdana','13','bold'), width=63,
     bg='#135823', fg='grey' ).grid(row=8,columnspan=2)
 
 #Show total of epochs
@@ -244,17 +244,12 @@ def all(e1, e2=0.0, e3=0.0, e4=True, e5="TanhLayer", e6='Padrão'):
             print '1 XOR 0: Esperado = 1, Calculado =', net.activate([1, 0])[0]
             print '0 XOR 1: Esperado = 1, Calculado =', net.activate([0, 1])[0]
             print '0 XOR 0: Esperado = 0, Calculado =', net.activate([0, 0])[0]
-            print 'Lista de erros', len(err)
-            print 'Lista de it', len(it)
-            print 'Lista de Scores', len(sc)
 
             print net['bias']
             print 'O DP é:', dp
             print "Pesos iniciais: ", p1
-            print"shape", ps
             print"Novos pesos:", net.params
-            print 'O tipo de e6: ', type(e6)
-            print"Novo shape", net.params.shape
+            print"Score:", score
             print 'e6 =', e6
             print 'e5 =', e5
 
@@ -264,13 +259,13 @@ def all(e1, e2=0.0, e3=0.0, e4=True, e5="TanhLayer", e6='Padrão'):
 
 #Create an empyt plotgrid
 #Learning
-fig1 = Figure(figsize=(5.5,5.15))
+fig1 = Figure(figsize=(6.3,5.15))
 canvas1 = FigureCanvasTkAgg(fig1, master=root)
 canvas1.get_tk_widget().grid(row=22,column=0,columnspan=2)
 canvas1.draw()
 
 def plot_error ():
-    fig1 = Figure(figsize=(5.5,5.15))
+    fig1 = Figure(figsize=(6.3,5.15))
     a = fig1.add_subplot(111)
     a.plot(it, err,color='blue', linewidth=2)
     a.set_title('Curva de erro', fontsize=16)
@@ -284,7 +279,7 @@ def plot_error ():
     canvas1.draw()
 
 def plot_learn ():
-    fig1 = Figure(figsize=(5.5,5.15))
+    fig1 = Figure(figsize=(6.3,5.15))
     b = fig1.add_subplot(111)
     b.plot(it, sc,color='red', linewidth=2)
     b.set_title('Curva de Aprendizado', fontsize=16)
@@ -296,7 +291,7 @@ def plot_learn ():
     canvas1.draw()
 
 def plot_points():#Need to be fixed. Is only a test for viewing
-    fig1 = Figure(figsize=(5.5,5.15))
+    fig1 = Figure(figsize=(6.3,5.15))
     a = fig1.add_subplot(111)
     b= fig1.add_subplot(111)
     a.plot(ds['input'],ds['target'],'bo',markersize=16, markeredgewidth=0)
