@@ -19,18 +19,17 @@ import os
 
 matplotlib.use('TkAgg')
 
+#Window root configs
 root = tk.Tk()
-
 root.title("RNA para previsão de valores da porta XOR")
 root.geometry("600x1030+400+100")
-
 img = ImageTk.PhotoImage(Image.open('pybrain_logoe.gif'))
 panel = tk.Label(root, image = img)
 panel.grid(row=0, column=0, columnspan=2, rowspan=4, sticky=W+E+N+S, padx=5,
         pady=5)
 
 
-# set up misc. widgets
+#Set up misc. widgets
 Label(root, text="Configurações", font=('Verdana','13','bold'), width=60,
     bg='#135823', fg='grey' ).grid(row=0,columnspan=2)
 Label(root, text="Épocas", font=('Verdana','11','bold')).grid(row=1)
@@ -289,9 +288,8 @@ def plot_learn ():
     b = fig1.add_subplot(111)
     b.plot(it, sc,color='red', linewidth=2)
     b.set_title('Curva de Aprendizado', fontsize=16)
-    #b.set_xlabel('Epoca', fontsize=14)
-    #b.set_ylabel('Score', fontsize=14, labelpad=7)#.set_rotation(0)
     b.grid()
+    b.set_yscale('log')
 
     canvas1 = FigureCanvasTkAgg(fig1, master=root)
     canvas1.get_tk_widget().grid(row=22,column=0,columnspan=2)
