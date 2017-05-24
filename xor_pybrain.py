@@ -23,6 +23,13 @@ matplotlib.use('TkAgg')
 root = tk.Tk()
 root.title("RNA para previsão de valores da porta XOR")
 root.geometry("630x1030+400+100")
+
+#### Just to work on Mac
+#img = ImageTk.PhotoImage(Image.open('pybrain_logoe.gif'))
+#panel = tk.Label(root, image = img)
+#panel.grid(row=0, column=0, columnspan=2, rowspan=4, sticky=W+E+N+S, padx=5,
+#        pady=5)
+
 img = ImageTk.PhotoImage(Image.open('pybrain_logoe.gif'))
 panel = tk.Label(root, image = img)
 panel.grid(row=0, column=0, columnspan=2, rowspan=4, sticky=W+E+N+S, padx=5,
@@ -34,7 +41,7 @@ Label(root, text="Configurações", font=('Verdana','13','bold'), width=63,
     bg='#135823', fg='grey' ).grid(row=0,columnspan=2)
 Label(root, text="Épocas", font=('Verdana','11','bold')).grid(row=1)
 Label(root, text="Momento", font=('Verdana','11','bold')).grid(row=1,column=1)
-Label(root, text="Aprendizagem", font=('Verdana','11','bold')).grid(row=3)
+Label(root, text="Aprendizagem", font=('Verdana','11','bold')).grid(row=5)
 
 var1 = DoubleVar()
 var2 = DoubleVar()
@@ -61,7 +68,7 @@ e3.grid(row=4)
 
 # Activation Bias
 Label(root, text="Ativar Bias", font=('Verdana','11','bold')).grid(row=3,
-    column=0, columnspan=2,  sticky=W+E+N+S, padx=5, pady=5)
+    column=0, columnspan=2,  sticky=W+E+N+S)
 e4 = IntVar(value=True)
 chk = Checkbutton(root, variable=e4,onvalue=True, offvalue=False).grid(row=4,
                 column=0, columnspan=2)
@@ -161,6 +168,10 @@ def all(e1, e2=0.0, e3=0.0, e4=True, e5="TanhLayer", e6='Padrão'):
         elif e6 == '(-0.1,0.1)':
             net._setParameters(np.random.uniform(-0.1,0.1,net.params.shape[0]))
 
+        ###################Instantiating the weights correctly to show##########
+        w_instance = []
+        w_instance = net.params.tolist()
+
         #Creating training data
         global ds
         ds = SupervisedDataSet(2, 1)
@@ -195,7 +206,7 @@ def all(e1, e2=0.0, e3=0.0, e4=True, e5="TanhLayer", e6='Padrão'):
             sc.append(score)
             err.append(error)
             it.append(epocasPercorridas)
-            if error == 0:
+            if error == max_error:
                 break
 
         #Show total of epochs
@@ -248,7 +259,7 @@ def all(e1, e2=0.0, e3=0.0, e4=True, e5="TanhLayer", e6='Padrão'):
             print net['bias']
             print 'O DP é:', dp
             print "Pesos iniciais: ", p1
-            print"Novos pesos:", net.params
+            print"Novos pesos:", np.array(w_instance)
             print"Score:", score
             print 'e6 =', e6
             print 'e5 =', e5
