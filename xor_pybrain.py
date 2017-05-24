@@ -37,38 +37,44 @@ panel.grid(row=0, column=0, columnspan=2, rowspan=4, sticky=W+E+N+S, padx=5,
 
 
 #Set up misc. widgets
+# Settings Label
 Label(root, text="Configurações", font=('Verdana','13','bold'), width=63,
     bg='#135823', fg='grey' ).grid(row=0,columnspan=2)
+
+# Epochs
 Label(root, text="Épocas", font=('Verdana','11','bold')).grid(row=1)
+var1 = IntVar()
+e1 = Entry( root, text = var1)
+e1.grid(row=2)
+var1.set(1000)
+
+# Max Error
+Label(root, text="Erro Máximo", font=('Verdana','11','bold')).grid(row=3)
+var6 = DoubleVar()
+e7 = Entry( root, text = var6)
+var6.set(0.0001)
+e7.grid(row=4)
+
+# Momentum
 Label(root, text="Momento", font=('Verdana','11','bold')).grid(row=1,column=1)
-Label(root, text="Aprendizagem", font=('Verdana','11','bold')).grid(row=5)
-
-var1 = DoubleVar()
 var2 = DoubleVar()
-var3 = DoubleVar()
-var4 = StringVar()
-var5 = DoubleVar()
-var6 = StringVar()
-
-e1 = Scale( root, variable = var1, from_=0, to=10000, resolution=50,
-        orient=HORIZONTAL)
-e1.set(1000)
-
 e2 = Scale( root, variable = var2, from_=0.0, to=1.0, resolution=0.01,
         orient=HORIZONTAL)
+e2.grid(row=2,column=1)
 e2.set(0.90)
 
+# Learning Rate
+Label(root, text="Aprendizagem", font=('Verdana','11','bold')).grid(row=3,
+    column=1)
+var3 = DoubleVar()
 e3 = Scale( root, variable = var3, from_=0.001, to=0.9, resolution=0.001,
         orient=HORIZONTAL)
+e3.grid(row=4, column=1)
 e3.set(0.01)
-
-e1.grid(row=2)
-e2.grid(row=2,column=1)
-e3.grid(row=4)
 
 # Activation Bias
 Label(root, text="Ativar Bias", font=('Verdana','11','bold')).grid(row=3,
-    column=0, columnspan=2,  sticky=W+E+N+S)
+    column=0, columnspan=2)
 e4 = IntVar(value=True)
 chk = Checkbutton(root, variable=e4,onvalue=True, offvalue=False).grid(row=4,
                 column=0, columnspan=2)
@@ -80,20 +86,23 @@ e5 = StringVar()
 e5.set("TanhLayer") # default value
 var4 = OptionMenu(root, e5, 'TanhLayer', 'SigmoidLayer').grid(row=6, column=0,
                 columnspan=2,)
+var4 = StringVar()
 
 #Setting Weights
-Label(root, text="Pesos", font=('Verdana','11','bold')).grid(row=3,
-    column=1, columnspan=2)
+Label(root, text="Pesos", font=('Verdana','11','bold')).grid(row=5,
+    column=0)
 e6 = StringVar()
 e6.set("Padrão") # default value
 var5 = OptionMenu(root, e6, 'Padrão', '(-1,0)', '(-1,1)', '(0,1)', '(-0.1,0.1)'
-                ).grid(row=4, column=1, columnspan=2,)
+                ).grid(row=6, column=0)
+var5 = DoubleVar()
 
 # Run Button
-submit = Button(root, text="Rodar", width=13, command=lambda: all(e1.get(),
-            e2.get(),e3.get(),e4.get(),e5.get(),e6.get())).grid(row=7, column=0,
+submit = Button(root, text="Rodar", width=13, command=lambda: all(int(e1.get()),
+            e2.get(),e3.get(),e4.get(),e5.get(),e6.get(),float(e7.get()))).grid(row=7, column=0,
             pady=4,columnspan=2)
 
+# Results Label
 Label(root, text="Resultados", font=('Verdana','13','bold'), width=63,
     bg='#135823', fg='grey' ).grid(row=8,columnspan=2)
 
@@ -147,9 +156,9 @@ sc = DoubleVar()
 ds = DoubleVar()
 dp = DoubleVar()
 
-def all(e1, e2=0.0, e3=0.0, e4=True, e5="TanhLayer", e6='Padrão'):
+def all(e1, e2=0.0, e3=0.0, e4=True, e5="TanhLayer", e6='Padrão', e7=0.0001):
 
-    def rerun(epocas, e2, e3, e4, e5, e6):
+    def rerun(epocas, e2, e3, e4, e5, e6, e7):
 
         #Making the net
         #The first 3 parameters are the nember of layers: In-Hidden-Out
@@ -168,7 +177,7 @@ def all(e1, e2=0.0, e3=0.0, e4=True, e5="TanhLayer", e6='Padrão'):
         elif e6 == '(-0.1,0.1)':
             net._setParameters(np.random.uniform(-0.1,0.1,net.params.shape[0]))
 
-        ###################Instantiating the weights correctly to show##########
+        ################# Instantiating the weights correctly to show ##########
         w_instance = []
         w_instance = net.params.tolist()
 
@@ -183,7 +192,7 @@ def all(e1, e2=0.0, e3=0.0, e4=True, e5="TanhLayer", e6='Padrão'):
         #Creating backdropTrainer
         trainer = BackpropTrainer(net, ds, learningrate=e3, momentum=e2)
 
-        max_error = 1
+        #max_error = 1
         error = 0.00001
         epocasPercorridas = 0
 
@@ -206,7 +215,7 @@ def all(e1, e2=0.0, e3=0.0, e4=True, e5="TanhLayer", e6='Padrão'):
             sc.append(score)
             err.append(error)
             it.append(epocasPercorridas)
-            if error == max_error:
+            if error < e7:
                 break
 
         #Show total of epochs
@@ -264,7 +273,7 @@ def all(e1, e2=0.0, e3=0.0, e4=True, e5="TanhLayer", e6='Padrão'):
             print 'e6 =', e6
             print 'e5 =', e5
 
-    rerun(e1, e2, e3, e4, e5, e6)
+    rerun(e1, e2, e3, e4, e5, e6, e7)
 
     root.mainloop()
 
